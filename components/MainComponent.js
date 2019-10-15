@@ -1,31 +1,68 @@
 import React, {Component} from 'react'
 import Menu from './MenuComponent'
-import {DISHES} from '../shared/dishes'
+import Home from './HomeComponent';
 import Dishdetail from './DIshdetailComponent';
-import {View} from 'react-native'
+import {View, Platform} from 'react-native'
+import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
+import { Icon } from 'react-native-elements';
 
-export default class Main extends Component{
-    constructor(props){
-        super(props);
-
-        this.state={
-            dishes: DISHES,
-            selectedDish: null
+const MenuNavigator = createStackNavigator ({
+    Menu : {screen : Menu},
+    Dishdetail :{screen: Dishdetail}
+},{
+    initialRouteKey: 'Menu',
+    navigationOptions:{
+        headerStyle:{
+            backgroundColor: '#fff'
+        },
+        headerTintColor: '#fff',
+        headerBackTitleStyle:{
+            color:'#fff'
         }
     }
+});
 
-    onDishSelect(dishid){
-        this.setState({selectedDish: dishid});
-    }
+const HomeNavigator = createStackNavigator({
+    Home: { screen: Home }
+  }, {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+          backgroundColor: "#512DA8"
+      },
+      headerTitleStyle: {
+          color: "#fff"            
+      },
+      headerTintColor: "#fff"  
+    })
+});
+
+const MainNavigator = createDrawerNavigator({
+    Home: 
+      { screen: HomeNavigator,
+        navigationOptions: {
+          title: 'Home',
+          drawerLabel: 'Home'
+        }
+      },
+    Menu: 
+      { screen: MenuNavigator,
+        navigationOptions: {
+          title: 'Menu',
+          drawerLabel: 'Menu'
+        }, 
+      }
+}, {
+  drawerBackgroundColor: '#D1C4E9'
+});
+
+export default class Main extends Component{
+
 
     render(){
         return(
-            <View>
-                <Menu dishes={this.state.dishes}
-                    onPress={(dishid)=> this.onDishSelect(dishid)}/>
-                
-                <Dishdetail dish={this.state.dishes.filter((dish) => dish.id === this.state.selectedDish)[0]}/>
+            <View style={{flex:1, paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight }}>
+                <MainNavigator/>
             </View>
         )
     }
-}
+} 
