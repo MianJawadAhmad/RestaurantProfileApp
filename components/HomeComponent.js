@@ -5,6 +5,7 @@ import { DISHES } from '../shared/dishes';
 import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 
+
 function RenderItem(props) {
     
     const item = props.item;
