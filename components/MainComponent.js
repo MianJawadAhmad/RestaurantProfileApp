@@ -1,12 +1,30 @@
-import React, {Component} from 'react'
-import Menu from './MenuComponent'
+import React, {Component} from 'react';
+import Menu from './MenuComponent';
 import Home from './HomeComponent';
-import AboutUs from './AboutComponent';
+import About from './AboutComponent';
 import ContactUs from './ContactComponent';
 import Dishdetail from './DIshdetailComponent';
-import {View, Platform, Image, StyleSheet,ScrollView,Text } from 'react-native'
+import {View, Platform, Image, StyleSheet,ScrollView,Text } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import { Icon } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+
+const mapStateToProps = state => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchDishes: () => dispatch(fetchDishes()),
+  fetchComments: () => dispatch(fetchComments()),
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
+})
 
 const MenuNavigator = createStackNavigator ({
     Menu : {screen : Menu ,
@@ -67,7 +85,7 @@ const ContactNavigator = createStackNavigator({
       })
   });
 const AboutNavigator = createStackNavigator({
-  About: { screen: AboutUs }
+  About: { screen: About }
 }, {
       navigationOptions: ({navigation}) => ({
           headerStyle: {
@@ -175,10 +193,20 @@ const MainNavigator = createDrawerNavigator({
   contentComponent: CustomDrawerContentComponent
 });
 
-export default class Main extends Component{
+class Main extends Component{
+
+  componentDidMount() {
+    console.log('jawad');
+   // console.log(this.props.fetchDishes());
+    this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
+    this.props.fetchLeaders();
+  }
 
 
     render(){
+      
         return(
             <View style={{flex:1 , paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight}}>
                 <MainNavigator/>
@@ -186,6 +214,8 @@ export default class Main extends Component{
         )
     }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -210,3 +240,6 @@ const styles = StyleSheet.create({
     height: 60
   }
 });
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
