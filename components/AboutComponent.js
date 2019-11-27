@@ -3,6 +3,7 @@ import {Text,View, FlatList,ScrollView} from 'react-native'
 import {Card,ListItem} from 'react-native-elements'
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import * as Animatable from 'react-native-animatable';
 
 const mapStateToProps = state => {
     return {
@@ -65,10 +66,11 @@ function History(){
             return(
                 <ScrollView>
                     <History />
-                    <Card
-                        title='Corporate Leadership'>
+                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+                     <Card title ='Our History'>
                         <Text>{this.props.leaders.errMess}</Text>
                     </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         }
@@ -76,14 +78,15 @@ function History(){
             return(
                 <ScrollView>
                     <History />
-                    <Card
-                        title='Corporate Leadership'>
+                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+                     <Card title ='Our History'>
                     <FlatList 
                         data={this.props.leaders.leaders}
                         renderItem={renderLeader}
                         keyExtractor={item => item.id.toString()}
                         />
                     </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         }
