@@ -8,7 +8,10 @@ import * as ActionTypes from './ActionTypes';
      case ActionTypes.COMMENTS_FAILED:
        return {...state, errMess: action.payload};
 
-     default:
+      case ActionTypes.ADD_COMMENT:
+      var comment = action.payload;
+      return {...state, comments: state.comments.concat(comment)};
+      default:
        return state;
    }
  }; 

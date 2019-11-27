@@ -4,6 +4,8 @@ import Home from './HomeComponent';
 import About from './AboutComponent';
 import ContactUs from './ContactComponent';
 import Dishdetail from './DIshdetailComponent';
+import Favorites from './FavoriteComponent';
+import Reservation from './ReservationComponent';
 import {View, Platform, Image, StyleSheet,ScrollView,Text } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import { Icon } from 'react-native-elements';
@@ -20,6 +22,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  addComment:(dishId, rating, comment, author) => dispatch(addComment(dishId, rating, comment, author)),
+  postComment:(dishId, rating, comment, author) => dispatch(postComment(dishId, rating, comment, author)),
   fetchDishes: () => dispatch(fetchDishes()),
   fetchComments: () => dispatch(fetchComments()),
   fetchPromos: () => dispatch(fetchPromos()),
@@ -102,6 +106,40 @@ const AboutNavigator = createStackNavigator({
       })
   });
 
+  const ReservationNavigator = createStackNavigator({
+    Reservation: { screen: Reservation }
+}, {
+        navigationOptions: ({ navigation }) => ({
+            headerStyle: {
+                backgroundColor: "#512DA8"
+            },
+            headerTitleStyle: {
+                color: "#fff"
+            },
+            headerTintColor: "#fff",
+            headerLeft: <Icon name="menu" size={24}
+            color='white'
+                onPress={() => navigation.toggleDrawer()} />
+        })
+    })
+
+    const FavoritesNavigator = createStackNavigator({
+      Favorites: { screen: Favorites }
+    }, {
+      navigationOptions: ({ navigation }) => ({
+        headerStyle: {
+            backgroundColor: "#512DA8"
+        },
+        headerTitleStyle: {
+            color: "#fff"            
+        },
+        headerTintColor: "#fff",
+        headerLeft: <Icon name="menu" size={24}
+          iconStyle={{ color: 'white' }} 
+          onPress={ () => navigation.navigate('DrawerToggle') } />    
+      })
+    });
+
   const CustomDrawerContentComponent = (props) => (
     <ScrollView>
       <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -183,12 +221,45 @@ const MainNavigator = createDrawerNavigator({
                   size={22}
                   color={tintColor}
                   />
-  
-            )
-          }
-      } 
+                  ),
+              },
+          },
+          Reservation:
+          {
+              screen: ReservationNavigator,
+              navigationOptions: {
+                  title: 'Reserve Table',
+                  drawerLabel: 'Reserve Table',
+                  drawerIcon: ({ tintColor, focused }) => (
+                      <Icon
+                          name='cutlery'
+                          type='font-awesome'
+                          size={24}
+                          color={tintColor}
+                      />
+                  ),
+              }
+            },
+            Favorites:
+              { screen: FavoritesNavigator,
+                navigationOptions: {
+                  title: 'My Favorites',
+                  drawerLabel: 'My Favorites',
+                  drawerIcon: ({ tintColor, focused }) => (
+                    <Icon
+                      name='heart'
+                      type='font-awesome'            
+                      size={24}
+                      iconStyle={{ color: tintColor }}
+                    />
+                  ),
+                }
+              }
       
-},{
+      
+        }, 
+      
+      {
   drawerBackgroundColor: '#D1C4E9',
   contentComponent: CustomDrawerContentComponent
 });
